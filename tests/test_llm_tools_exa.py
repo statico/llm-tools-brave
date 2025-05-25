@@ -2,7 +2,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from llm_tools_exa import web_search
+from llm_tools_exa import get_answer, web_search
 
 
 @pytest.fixture
@@ -187,3 +187,131 @@ def test_web_search_valid_categories(
         text=True,
         highlights=True,
     )
+
+
+@pytest.fixture
+def mock_answer_citation():
+    """Mock Exa answer citation object."""
+    citation = Mock()
+    citation.title = "Citation Title"
+    citation.url = "https://citation.com"
+    citation.published_date = "2024-01-01"
+    return citation
+
+
+@pytest.fixture
+def mock_answer_response(mock_answer_citation):
+    """Mock Exa answer API response."""
+    response = Mock()
+    response.answer = "This is the answer to your question."
+    response.citations = [mock_answer_citation]
+    return response
+
+
+@patch("llm_tools_exa.Exa")
+@patch("llm_tools_exa.llm.get_key")
+def test_get_answer_basic(mock_get_key, mock_exa_class, mock_answer_response):
+    """Test basic get_answer functionality."""
+    # Setup mocks
+    mock_get_key.return_value = "test_api_key"
+    mock_exa_instance = Mock()
+    mock_exa_instance.answer.return_value = mock_answer_response
+    mock_exa_class.return_value = mock_exa_instance
+
+    # Call function
+    result = get_answer("What is Python?")
+
+    # Verify API calls
+    mock_get_key.assert_called_once_with(
+        explicit_key="exa", key_alias="exa", env_var="EXA_API_KEY"
+    )
+    mock_exa_class.assert_called_once_with("test_api_key")
+    mock_exa_instance.answer.assert_called_once_with(
+        query="What is Python?", stream=False, text=False
+    )
+
+    # Verify output format
+    assert "This is the answer to your question." in result
+    assert "Citation: Citation Title" in result
+    assert "URL: https://citation.com" in result
+    assert "Published: 2024-01-01" in result
+
+
+@patch("llm_tools_exa.Exa")
+@patch("llm_tools_exa.llm.get_key")
+def test_get_answer_multiple_citations(mock_get_key, mock_exa_class):
+    """Test get_answer with multiple citations."""
+    mock_get_key.return_value = "test_api_key"
+    mock_exa_instance = Mock()
+
+    # Create multiple mock citations
+    citation1 = Mock()
+    citation1.title = "First Citation"
+    citation1.url = "https://first.com"
+    citation1.published_date = "2024-01-01"
+
+    citation2 = Mock()
+    citation2.title = "Second Citation"
+    citation2.url = "https://second.com"
+    citation2.published_date = "2024-01-02"
+
+    mock_response = Mock()
+    mock_response.answer = "Comprehensive answer with multiple sources."
+    mock_response.citations = [citation1, citation2]
+
+    mock_exa_instance.answer.return_value = mock_response
+    mock_exa_class.return_value = mock_exa_instance
+
+    result = get_answer("Complex question")
+
+    # Verify both citations are in output
+    assert "Comprehensive answer with multiple sources." in result
+    assert "First Citation" in result
+    assert "Second Citation" in result
+    assert "https://first.com" in result
+    assert "https://second.com" in result
+
+
+@patch("llm_tools_exa.Exa")
+@patch("llm_tools_exa.llm.get_key")
+def test_get_answer_no_citations(mock_get_key, mock_exa_class):
+    """Test get_answer with no citations."""
+    mock_get_key.return_value = "test_api_key"
+    mock_exa_instance = Mock()
+
+    mock_response = Mock()
+    mock_response.answer = "Answer without citations."
+    mock_response.citations = []
+
+    mock_exa_instance.answer.return_value = mock_response
+    mock_exa_class.return_value = mock_exa_instance
+
+    result = get_answer("Simple question")
+
+    # Should only contain the answer
+    assert result == "Answer without citations."
+
+
+@patch("llm_tools_exa.Exa")
+@patch("llm_tools_exa.llm.get_key")
+def test_get_answer_citations_false(mock_get_key, mock_exa_class, mock_answer_response):
+    """Test get_answer with citations=False."""
+    # Setup mocks
+    mock_get_key.return_value = "test_api_key"
+    mock_exa_instance = Mock()
+    mock_exa_instance.answer.return_value = mock_answer_response
+    mock_exa_class.return_value = mock_exa_instance
+
+    # Call function with citations=False
+    result = get_answer("What is Python?", citations=False)
+
+    # Verify API calls
+    mock_exa_instance.answer.assert_called_once_with(
+        query="What is Python?", stream=False, text=False
+    )
+
+    # Verify output contains only answer, no citations
+    assert result == "This is the answer to your question."
+    assert "Citation:" not in result
+    assert "URL:" not in result
+    assert "Published:" not in result

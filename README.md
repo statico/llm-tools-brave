@@ -17,12 +17,25 @@ llm install llm-tools-exa
 
 ## Usage
 
-Create an account at [Exa](https://exa.ai/) and get your API key from [this page](https://dashboard.exa.ai/api-keys). Add it to llm with `llm keys set exa`. Then use `-T web_search` to enable the tool.
+Create an account at [Exa](https://exa.ai/) and get your API key from [this page](https://dashboard.exa.ai/api-keys). Add it to llm with `llm keys set exa`. 
 
+This plugin provides two tools:
+
+### web_search
+Search the web for high-quality, relevant results with content and highlights:
 
 ```bash
 llm -m claude-4-sonnet -T web_search "search the web to get today's weather in nyc"
 ```
+
+### get_answer  
+Get a direct answer to a question with optional citations:
+
+```bash
+llm -m claude-4-sonnet -T get_answer "What is the capital of France?"
+```
+
+You can ask the model to include or omit citations, as desired.
 
 ## Development
 

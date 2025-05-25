@@ -1,7 +1,8 @@
-from typing import Literal, Optional
+from typing import Literal, Optional, cast
 
 import llm
 from exa_py import Exa
+from exa_py.api import AnswerResponse
 
 
 def web_search(
@@ -55,6 +56,26 @@ def web_search(
     return "\n".join(output)
 
 
+def get_answer(query: str, citations: bool = True):
+    """Get a direct answer to a question using Exa API with optional citations.
+
+    Args:
+        query: The question to get an answer for.
+        citations: Whether to include citations in the response (default: True).
+    """
+    exa_key = llm.get_key(explicit_key="exa", key_alias="exa", env_var="EXA_API_KEY")
+    exa = Exa(exa_key)
+    answer = cast(AnswerResponse, exa.answer(query=query, stream=False, text=False))
+    output = [str(answer.answer)]
+    if citations:
+        for citation in answer.citations:
+            output.append(f"Citation: {citation.title}")
+            output.append(f"URL: {citation.url}")
+            output.append(f"Published: {citation.published_date}")
+    return "\n".join(output)
+
+
 @llm.hookimpl
 def register_tools(register):
     register(web_search)
+    register(get_answer)
