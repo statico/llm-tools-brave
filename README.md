@@ -1,27 +1,27 @@
-# llm-tools-rag
+# llm-tools-exa
 
-A tool plugin for [LLM](https://llm.datasette.io/) that allows you to search over your embedding collections.
+A tool plugin for [LLM](https://llm.datasette.io/) that allows you to search the web using [Exa](https://exa.ai/).
 
-[![PyPI](https://img.shields.io/pypi/v/llm-tools-rag.svg)](https://pypi.org/project/llm-tools-rag/)
-[![Changelog](https://img.shields.io/github/v/release/daturkel/llm-tools-rag?include_prereleases&label=changelog)](https://github.com/daturkel/llm-tools-rag/releases)
-[![Tests](https://github.com/daturkel/llm-tools-rag/actions/workflows/test.yml/badge.svg)](https://github.com/daturkel/llm-tools-rag/actions/workflows/test.yml)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/daturkel/llm-tools-rag/blob/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/llm-tools-exa.svg)](https://pypi.org/project/llm-tools-exa/)
+[![Changelog](https://img.shields.io/github/v/release/daturkel/llm-tools-exa?include_prereleases&label=changelog)](https://github.com/daturkel/llm-tools-exa/releases)
+[![Tests](https://github.com/daturkel/llm-tools-exa/actions/workflows/test.yml/badge.svg)](https://github.com/daturkel/llm-tools-exa/actions/workflows/test.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/daturkel/llm-tools-exa/blob/main/LICENSE)
 
 ## Installation
 
 Install this plugin in the same environment as [LLM](https://llm.datasette.io/):
 
 ```bash
-llm install llm-tools-rag
+llm install llm-tools-exa
 ```
 
 ## Usage
 
-Use `-T get_collection -T get_relevant_documents` to enable the RAG tools.
+Create an account at [Exa](https://exa.ai/) and get your API key from [this page](https://dashboard.exa.ai/api-keys). Add it to llm with `llm keys set exa`. Then use `-T web_search` to enable the tool.
 
 
 ```bash
-llm -m claude-4-sonnet -T get_collections -T get_relevant_documents "what are the available plugin hooks in llm?"
+llm -m claude-4-sonnet -T web_search "search the web to get today's weather in nyc"
 ```
 
 ## Development
@@ -29,7 +29,7 @@ llm -m claude-4-sonnet -T get_collections -T get_relevant_documents "what are th
 To set up this plugin locally, first checkout the code. Then create a new virtual environment:
 
 ```bash
-cd llm-tools-rag
+cd llm-tools-exa
 python -m venv venv
 source venv/bin/activate
 ```
