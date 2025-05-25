@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 import llm
 from exa_py import Exa
@@ -7,19 +7,20 @@ from exa_py import Exa
 def web_search(
     query: str,
     num_results: int = 3,
-    category: Literal[
-        "company",
-        "research paper",
-        "news",
-        "pdf",
-        "github",
-        "tweet",
-        "personal site",
-        "linkedin profile",
-        "financial report",
-    ]
-    | None = None,
-    include_domains: list[str] | None = None,
+    category: Optional[
+        Literal[
+            "company",
+            "research paper",
+            "news",
+            "pdf",
+            "github",
+            "tweet",
+            "personal site",
+            "linkedin profile",
+            "financial report",
+        ]
+    ] = None,
+    include_domains: Optional[list[str]] = None,
 ):
     """Search the web using Exa API for high-quality, relevant results.
 
