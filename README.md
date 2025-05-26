@@ -19,7 +19,9 @@ llm install llm-tools-exa
 
 Create an account at [Exa](https://exa.ai/) and get your API key from [this page](https://dashboard.exa.ai/api-keys). Add it to llm with `llm keys set exa`. 
 
-This plugin provides two tools:
+This plugin provides two tools which can be bundled together or provided separately.
+
+Use `-T Exa` to include both tools, `-T web_search` for web search only, and `-T get_answer` for get answer only.
 
 ### web_search
 Search the web for high-quality, relevant results with content and highlights:
