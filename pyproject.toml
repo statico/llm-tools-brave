@@ -1,6 +1,6 @@
 [project]
 name = "llm-tools-exa"
-version = "0.1.0"
+version = "0.3.0"
 description = "A tool plugin for LLM to enable web search with Exa"
 readme = "README.md"
 license = "MIT"
