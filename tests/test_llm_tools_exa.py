@@ -2,7 +2,13 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from llm_tools_exa import get_answer, web_search
+from llm_tools_exa import ExaTools
+
+
+@pytest.fixture
+def exa_tools():
+    """Create ExaTools instance for testing."""
+    return ExaTools()
 
 
 @pytest.fixture
@@ -28,7 +34,7 @@ def mock_exa_response(mock_exa_result):
 
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
-def test_web_search_basic(mock_get_key, mock_exa_class, mock_exa_response):
+def test_web_search_basic(mock_get_key, mock_exa_class, mock_exa_response, exa_tools):
     """Test basic web search functionality."""
     # Setup mocks
     mock_get_key.return_value = "test_api_key"
@@ -37,7 +43,7 @@ def test_web_search_basic(mock_get_key, mock_exa_class, mock_exa_response):
     mock_exa_class.return_value = mock_exa_instance
 
     # Call function
-    result = web_search("test query")
+    result = exa_tools.web_search("test query")
 
     # Verify API calls
     mock_get_key.assert_called_once_with(
@@ -67,7 +73,9 @@ def test_web_search_basic(mock_get_key, mock_exa_class, mock_exa_response):
 
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
-def test_web_search_with_parameters(mock_get_key, mock_exa_class, mock_exa_response):
+def test_web_search_with_parameters(
+    mock_get_key, mock_exa_class, mock_exa_response, exa_tools
+):
     """Test web search with custom parameters."""
     mock_get_key.return_value = "test_api_key"
     mock_exa_instance = Mock()
@@ -75,7 +83,7 @@ def test_web_search_with_parameters(mock_get_key, mock_exa_class, mock_exa_respo
     mock_exa_class.return_value = mock_exa_instance
 
     # Call with custom parameters
-    web_search(
+    exa_tools.web_search(
         query="python tutorials",
         num_results=5,
         category="research paper",
@@ -96,7 +104,7 @@ def test_web_search_with_parameters(mock_get_key, mock_exa_class, mock_exa_respo
 
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
-def test_web_search_multiple_results(mock_get_key, mock_exa_class):
+def test_web_search_multiple_results(mock_get_key, mock_exa_class, exa_tools):
     """Test web search with multiple results."""
     mock_get_key.return_value = "test_api_key"
     mock_exa_instance = Mock()
@@ -123,7 +131,7 @@ def test_web_search_multiple_results(mock_get_key, mock_exa_class):
     mock_exa_instance.search_and_contents.return_value = mock_response
     mock_exa_class.return_value = mock_exa_instance
 
-    result = web_search("test query")
+    result = exa_tools.web_search("test query")
 
     # Verify both results are in output
     assert "First Result" in result
@@ -135,7 +143,7 @@ def test_web_search_multiple_results(mock_get_key, mock_exa_class):
 
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
-def test_web_search_empty_results(mock_get_key, mock_exa_class):
+def test_web_search_empty_results(mock_get_key, mock_exa_class, exa_tools):
     """Test web search with no results."""
     mock_get_key.return_value = "test_api_key"
     mock_exa_instance = Mock()
@@ -145,7 +153,7 @@ def test_web_search_empty_results(mock_get_key, mock_exa_class):
     mock_exa_instance.search_and_contents.return_value = mock_response
     mock_exa_class.return_value = mock_exa_instance
 
-    result = web_search("nonexistent query")
+    result = exa_tools.web_search("nonexistent query")
 
     # Should return empty string when no results
     assert result == ""
@@ -168,7 +176,7 @@ def test_web_search_empty_results(mock_get_key, mock_exa_class):
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
 def test_web_search_valid_categories(
-    mock_get_key, mock_exa_class, mock_exa_response, category
+    mock_get_key, mock_exa_class, mock_exa_response, category, exa_tools
 ):
     """Test web search with all valid category values."""
     mock_get_key.return_value = "test_api_key"
@@ -176,7 +184,7 @@ def test_web_search_valid_categories(
     mock_exa_instance.search_and_contents.return_value = mock_exa_response
     mock_exa_class.return_value = mock_exa_instance
 
-    web_search("test", category=category)
+    exa_tools.web_search("test", category=category)
 
     mock_exa_instance.search_and_contents.assert_called_once_with(
         query="test",
@@ -210,7 +218,9 @@ def mock_answer_response(mock_answer_citation):
 
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
-def test_get_answer_basic(mock_get_key, mock_exa_class, mock_answer_response):
+def test_get_answer_basic(
+    mock_get_key, mock_exa_class, mock_answer_response, exa_tools
+):
     """Test basic get_answer functionality."""
     # Setup mocks
     mock_get_key.return_value = "test_api_key"
@@ -219,7 +229,7 @@ def test_get_answer_basic(mock_get_key, mock_exa_class, mock_answer_response):
     mock_exa_class.return_value = mock_exa_instance
 
     # Call function
-    result = get_answer("What is Python?")
+    result = exa_tools.get_answer("What is Python?")
 
     # Verify API calls
     mock_get_key.assert_called_once_with(
@@ -239,7 +249,7 @@ def test_get_answer_basic(mock_get_key, mock_exa_class, mock_answer_response):
 
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
-def test_get_answer_multiple_citations(mock_get_key, mock_exa_class):
+def test_get_answer_multiple_citations(mock_get_key, mock_exa_class, exa_tools):
     """Test get_answer with multiple citations."""
     mock_get_key.return_value = "test_api_key"
     mock_exa_instance = Mock()
@@ -262,7 +272,7 @@ def test_get_answer_multiple_citations(mock_get_key, mock_exa_class):
     mock_exa_instance.answer.return_value = mock_response
     mock_exa_class.return_value = mock_exa_instance
 
-    result = get_answer("Complex question")
+    result = exa_tools.get_answer("Complex question")
 
     # Verify both citations are in output
     assert "Comprehensive answer with multiple sources." in result
@@ -274,7 +284,7 @@ def test_get_answer_multiple_citations(mock_get_key, mock_exa_class):
 
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
-def test_get_answer_no_citations(mock_get_key, mock_exa_class):
+def test_get_answer_no_citations(mock_get_key, mock_exa_class, exa_tools):
     """Test get_answer with no citations."""
     mock_get_key.return_value = "test_api_key"
     mock_exa_instance = Mock()
@@ -286,7 +296,7 @@ def test_get_answer_no_citations(mock_get_key, mock_exa_class):
     mock_exa_instance.answer.return_value = mock_response
     mock_exa_class.return_value = mock_exa_instance
 
-    result = get_answer("Simple question")
+    result = exa_tools.get_answer("Simple question")
 
     # Should only contain the answer
     assert result == "Answer without citations."
@@ -294,7 +304,9 @@ def test_get_answer_no_citations(mock_get_key, mock_exa_class):
 
 @patch("llm_tools_exa.Exa")
 @patch("llm_tools_exa.llm.get_key")
-def test_get_answer_citations_false(mock_get_key, mock_exa_class, mock_answer_response):
+def test_get_answer_citations_false(
+    mock_get_key, mock_exa_class, mock_answer_response, exa_tools
+):
     """Test get_answer with citations=False."""
     # Setup mocks
     mock_get_key.return_value = "test_api_key"
@@ -303,7 +315,7 @@ def test_get_answer_citations_false(mock_get_key, mock_exa_class, mock_answer_re
     mock_exa_class.return_value = mock_exa_instance
 
     # Call function with citations=False
-    result = get_answer("What is Python?", citations=False)
+    result = exa_tools.get_answer("What is Python?", citations=False)
 
     # Verify API calls
     mock_exa_instance.answer.assert_called_once_with(
