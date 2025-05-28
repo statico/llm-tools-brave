@@ -1,6 +1,6 @@
 [project]
 name = "llm-tools-exa"
-version = "0.3.0"
+version = "0.4.0"
 description = "A tool plugin for LLM to enable web search with Exa"
 readme = "README.md"
 license = "MIT"
@@ -10,7 +10,7 @@ authors = [
 requires-python = ">=3.9"
 dependencies = [
     "exa-py>=1.13.1",
-    "llm>=0.26a1",
+    "llm>=0.26",
 ]
 
 [project.entry-points.llm]
