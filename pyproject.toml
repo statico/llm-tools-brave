@@ -1,26 +1,19 @@
 [project]
-name = "llm-tools-exa"
-version = "0.4.0"
-description = "A tool plugin for LLM to enable web search with Exa"
+name = "llm-tools-brave"
+version = "0.1.0"
+description = "A tool plugin for LLM to enable web search with Brave Search API"
 readme = "README.md"
 license = "MIT"
-authors = [
-    { name = "Dan Turkel", email = "daturkel@gmail.com" }
-]
+authors = [{ name = "Ian Langworth", email = "ian@langworth.com" }]
 requires-python = ">=3.9"
-dependencies = [
-    "exa-py>=1.13.1",
-    "llm>=0.26",
-]
+dependencies = ["httpx>=0.24.0", "llm>=0.26"]
 
 [project.entry-points.llm]
-llm_tools_exa = "llm_tools_exa"
+llm_tools_brave = "llm_tools_brave"
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
-test = [
-    "pytest>=8.3.5",
-]
+test = ["pytest>=8.3.5"]
