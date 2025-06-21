@@ -3,9 +3,8 @@
 A tool plugin for [LLM](https://llm.datasette.io/) that allows you to search the web using [Brave Search API](https://brave.com/search/api/).
 
 [![PyPI](https://img.shields.io/pypi/v/llm-tools-brave.svg)](https://pypi.org/project/llm-tools-brave/)
-[![Changelog](https://img.shields.io/github/v/release/daturkel/llm-tools-brave?include_prereleases&label=changelog)](https://github.com/daturkel/llm-tools-brave/releases)
-[![Tests](https://github.com/daturkel/llm-tools-brave/actions/workflows/test.yml/badge.svg)](https://github.com/daturkel/llm-tools-brave/actions/workflows/test.yml)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/daturkel/llm-tools-brave/blob/main/LICENSE)
+[![Tests](https://github.com/statico/llm-tools-brave/actions/workflows/test.yml/badge.svg)](https://github.com/statico/llm-tools-brave/actions/workflows/test.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/statico/llm-tools-brave/blob/main/LICENSE)
 
 ## Installation
 
