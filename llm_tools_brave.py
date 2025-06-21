@@ -163,10 +163,21 @@ class BraveTools(llm.Toolbox):
         for result in image_results:
             output.append(f"Title: {result.get('title', 'N/A')}")
             output.append(f"Source: {result.get('source', 'N/A')}")
+
+            # Handle URL field - could be direct or in properties
+            url = result.get("url")
+            if not url and result.get("properties"):
+                url = result["properties"].get("url")
+            if url:
+                output.append(f"URL: {url}")
+
+            # Handle thumbnail
+            if result.get("thumbnail") and result["thumbnail"].get("src"):
+                output.append(f"Thumbnail: {result['thumbnail']['src']}")
+
+            # Handle dimensions from properties
             if result.get("properties"):
                 props = result["properties"]
-                if props.get("url"):
-                    output.append(f"URL: {props['url']}")
                 if props.get("width") and props.get("height"):
                     output.append(f"Dimensions: {props['width']}x{props['height']}")
             output.append("---------\n")
